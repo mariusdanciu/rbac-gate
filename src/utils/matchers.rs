@@ -4,17 +4,16 @@ use crate::utils::ConfigVariables;
 use std::collections::HashMap;
 
 pub(crate) fn match_entity(
-    headers: &Option<Vec<EntityMatch>>,
+    entities: &Option<Vec<EntityMatch>>,
     get_fn: impl Fn(&str) -> Option<String>,
 ) -> Option<ConfigVariables> {
     let mut variables = HashMap::with_capacity(10);
 
-    if let Some(headers) = headers {
+    if let Some(headers) = entities {
         for e_match in headers {
             match e_match {
                 EntityMatch::EqualsOrExtract { name, value } => {
-                    let h = get_fn(name.as_str());
-                    if let Some(h) = h {
+                    if let Some(h) = get_fn(name.as_str()) {
                         match &value {
                             Binding::Variable(var) => {
                                 variables.insert(var.to_string(), h);
